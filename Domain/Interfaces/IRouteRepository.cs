@@ -8,5 +8,10 @@ namespace CourseWork.Domain.Interfaces
         IEnumerable<Route> GetRoutesByDay(DayOfWeek day);
         IEnumerable<Route> GetRoutesByPoint(string point);
         IEnumerable<Route> GetRoutesByTimeRange(TimeSpan startTime, TimeSpan endTime);
+        IEnumerable<Route> GetRoutesByTravelTimeRange(TimeSpan minTime, TimeSpan maxTime);
+        IEnumerable<string> GetAllStartPoints();
+        IEnumerable<string> GetAllEndPoints();
+        Dictionary<DayOfWeek, int> GetDayStatistics();
+        TimeSpan GetAverageTravelTime();
     }
 }

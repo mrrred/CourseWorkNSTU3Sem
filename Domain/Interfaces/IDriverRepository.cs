@@ -8,5 +8,9 @@ namespace CourseWork.Domain.Interfaces
         IEnumerable<Driver> GetByExperience(int minExperience);
         IEnumerable<Driver> GetByClass(int driverClass);
         IEnumerable<Driver> GetByBirthYearRange(int startYear, int endYear);
+        IEnumerable<Driver> GetByFullName(string fullName);
+        double GetAverageExperience();
+        Dictionary<string, int> GetCategoryStatistics();
+        Dictionary<int, int> GetClassStatistics();
     }
 }

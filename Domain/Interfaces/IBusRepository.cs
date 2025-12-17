@@ -7,5 +7,9 @@ namespace CourseWork.Domain.Interfaces
         IEnumerable<Bus> GetByBrand(string brand);
         IEnumerable<Bus> GetByCapacityRange(int minCapacity, int maxCapacity);
         IEnumerable<Bus> GetByYearRange(int startYear, int endYear);
+        IEnumerable<Bus> GetByOverhaulStatus(bool hasOverhaul);
+        int GetTotalCapacity();
+        double GetAverageCapacity();
+        IEnumerable<string> GetAllBrands();
     }
 }

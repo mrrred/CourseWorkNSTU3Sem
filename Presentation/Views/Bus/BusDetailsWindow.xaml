@@ -1,0 +1,132 @@
+﻿<Window x:Class="CourseWork.Presentation.Views.Bus.BusDetailsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CourseWork.Presentation.Views.Bus"
+        xmlns:converters="clr-namespace:CourseWork.Presentation.Converters"
+        mc:Ignorable="d"
+        Title="Детальная информация об автобусе" 
+        Height="550" 
+        Width="450"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+
+    <Window.Resources>
+        <converters:NullImageConverter x:Key="NullImageConverter"/>
+
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="Border">
+            <Setter Property="BorderBrush" Value="LightGray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="250"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Фото автобуса -->
+        <Border Grid.Row="0" Grid.Column="0">
+            <Image Source="{Binding Bus.PhotoPath, Converter={StaticResource NullImageConverter}}"
+                   Stretch="Uniform"/>
+        </Border>
+
+        <!-- Гос. номер -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Гос. номер:" FontWeight="Bold"/>
+            <TextBlock Grid.Column="1" Text="{Binding Bus.GovernmentNumber}"/>
+        </Grid>
+
+        <!-- Марка и модель -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Марка и модель:" FontWeight="Bold"/>
+            <TextBlock Grid.Column="1" Text="{Binding Bus.BrandModel}"/>
+        </Grid>
+
+        <!-- Вместимость -->
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Вместимость:" FontWeight="Bold"/>
+            <TextBlock Grid.Column="1" Text="{Binding Bus.Capacity}"/>
+        </Grid>
+
+        <!-- Год выпуска -->
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Год выпуска:" FontWeight="Bold"/>
+            <TextBlock Grid.Column="1" Text="{Binding Bus.YearOfManufacture}"/>
+        </Grid>
+
+        <!-- Год кап. ремонта -->
+        <Grid Grid.Row="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Год кап. ремонта:" FontWeight="Bold"/>
+            <TextBlock Grid.Column="1" Text="{Binding Bus.YearOfOverhaulDisplay}"/>
+        </Grid>
+
+        <!-- Пробег -->
+        <Grid Grid.Row="6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Пробег:" FontWeight="Bold"/>
+            <TextBlock Grid.Column="1">
+                <Run Text="{Binding Bus.MileageAtYearStart}"/>
+                <Run Text=" км"/>
+            </TextBlock>
+        </Grid>
+
+        <!-- Статус фото -->
+        <Grid Grid.Row="7">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Фото:" FontWeight="Bold"/>
+            <TextBlock Grid.Column="1" Text="{Binding Bus.PhotoStatus}"/>
+        </Grid>
+
+        <!-- Кнопка закрытия -->
+        <Button Grid.Row="9" 
+                Content="Закрыть" 
+                Width="100"
+                HorizontalAlignment="Center"
+                Margin="0 20 0 0"
+                Click="CloseButton_Click"/>
+    </Grid>
+</Window>

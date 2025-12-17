@@ -1,12 +1,96 @@
-﻿<Window x:Class="Presentation.MainWindow"
+﻿<Window x:Class="CourseWork.Presentation.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Presentation"
+        xmlns:local="clr-namespace:CourseWork.Presentation"
+        xmlns:viewModels="clr-namespace:CourseWork.Presentation.ViewModels"
+        xmlns:viewModelsBus="clr-namespace:CourseWork.Presentation.ViewModels.Bus"
+        xmlns:viewsBus="clr-namespace:CourseWork.Presentation.Views.Bus"
+        xmlns:converters="clr-namespace:CourseWork.Presentation.Converters"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Учет пассажирских автоперевозок"
+        Height="650" Width="1000"
+        WindowStartupLocation="CenterScreen">
 
+    <!-- Уберите DataContext из разметки XAML -->
+
+    <Window.Resources>
+        <converters:NullImageConverter x:Key="NullImageConverter"/>
+
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="10 5"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+
+        <Style TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+
+        <!-- DataTemplate для заглушки -->
+        <DataTemplate DataType="{x:Type viewModels:PlaceholderViewModel}">
+            <Border Background="White" Padding="20">
+                <TextBlock Text="{Binding Title}"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Foreground="Gray"/>
+            </Border>
+        </DataTemplate>
+
+        <!-- DataTemplate для BusListViewModel -->
+        <DataTemplate DataType="{x:Type viewModelsBus:BusListViewModel}">
+            <viewsBus:BusListView/>
+        </DataTemplate>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <Border Grid.Row="0" Background="#007ACC" Padding="10">
+            <TextBlock Text="🚌 Система учета пассажирских автоперевозок"
+                       Foreground="White"
+                       FontSize="18"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"/>
+        </Border>
+
+        <!-- Основное содержимое -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Панель навигации -->
+            <Border Grid.Column="0" BorderBrush="LightGray" BorderThickness="0 0 1 0">
+                <StackPanel Margin="10">
+                    <TextBlock Text="Навигация"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Margin="0 0 0 10"/>
+                    <Button Content="🚌 Автобусы"
+                            Command="{Binding ShowBusViewCommand}"/>
+                    <Button Content="👤 Водители"
+                            Command="{Binding ShowDriverViewCommand}"/>
+                    <Button Content="🗺️ Маршруты"
+                            Command="{Binding ShowRouteViewCommand}"/>
+                    <Button Content="🚌📊 Рейсы и статистика"
+                            Command="{Binding ShowTripViewCommand}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Область контента -->
+            <ContentControl Grid.Column="1"
+                            Content="{Binding CurrentViewModel}"
+                            Margin="10"/>
+        </Grid>
     </Grid>
 </Window>

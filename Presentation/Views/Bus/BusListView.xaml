@@ -1,0 +1,133 @@
+﻿<UserControl x:Class="CourseWork.Presentation.Views.Bus.BusListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CourseWork.Presentation.Views.Bus"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <TextBlock Grid.Row="0" Text="🚌 Автобусы" 
+                   FontSize="20" FontWeight="Bold" 
+                   Margin="10"/>
+
+        <!-- Панель инструментов -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10 0 10 10">
+            <Button Content="Добавить автобус" 
+                    Command="{Binding AddBusCommand}" 
+                    Padding="10 5"/>
+            <Button Content="Редактировать" 
+                    Command="{Binding EditBusCommand}" 
+                    Padding="10 5" 
+                    Margin="10 0 0 0"/>
+            <Button Content="Удалить" 
+                    Command="{Binding DeleteBusCommand}" 
+                    Padding="10 5" 
+                    Margin="10 0 0 0"/>
+            <Button Content="Просмотреть детали" 
+                    Command="{Binding ViewDetailsCommand}" 
+                    Padding="10 5" 
+                    Margin="10 0 0 0"/>
+            <Button Content="Обновить" 
+                    Command="{Binding RefreshCommand}" 
+                    Padding="10 5" 
+                    Margin="20 0 0 0"/>
+
+            <TextBlock Text="Поиск:" 
+                       VerticalAlignment="Center" 
+                       Margin="20 0 5 0"/>
+            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
+                     Width="200" 
+                     Margin="5 0 0 0"
+                     Padding="5"
+                     VerticalAlignment="Center">
+                <TextBox.ToolTip>
+                    <TextBlock Text="Поиск по гос. номеру или марке"/>
+                </TextBox.ToolTip>
+            </TextBox>
+        </StackPanel>
+
+        <!-- Список автобусов -->
+        <DataGrid Grid.Row="2" 
+                  ItemsSource="{Binding FilteredBuses}" 
+                  SelectedItem="{Binding SelectedBus}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  IsReadOnly="True"
+                  SelectionMode="Single"
+                  Margin="10">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Гос. номер" 
+                                    Binding="{Binding GovernmentNumber}" 
+                                    Width="100"/>
+                <DataGridTextColumn Header="Марка и модель" 
+                                    Binding="{Binding BrandModel}" 
+                                    Width="200"/>
+                <DataGridTextColumn Header="Вместимость" 
+                                    Binding="{Binding Capacity}" 
+                                    Width="80">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Год выпуска" 
+                                    Binding="{Binding YearOfManufacture}" 
+                                    Width="80">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Кап. ремонт" 
+                                    Binding="{Binding YearOfOverhaulDisplay}" 
+                                    Width="80">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Пробег" 
+                                    Binding="{Binding MileageAtYearStart}" 
+                                    Width="80">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Фото" 
+                                    Binding="{Binding PhotoStatus}" 
+                                    Width="80"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Статус -->
+        <StatusBar Grid.Row="3" Margin="10 5 10 10">
+            <StatusBarItem>
+                <TextBlock>
+            <Run Text="Всего автобусов:"/>
+            <Run Text="{Binding TotalBusCount, Mode=OneWay}"/>
+                </TextBlock>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <TextBlock>
+            <Run Text="Отображается:"/>
+            <Run Text="{Binding FilteredBusCount, Mode=OneWay}"/>
+                </TextBlock>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</UserControl>

@@ -1,4 +1,5 @@
-﻿using CourseWork.Presentation.Common;
+﻿using CourseWork.Core.Config;
+using CourseWork.Presentation.Common;
 using CourseWork.Presentation.Services;
 
 namespace CourseWork.Presentation.ViewModels.Bus
@@ -16,7 +17,7 @@ namespace CourseWork.Presentation.ViewModels.Bus
 
         public BusDetailsViewModel(IImageService imageService, BusItemViewModel bus)
         {
-            _imageService = imageService ?? new ImageService();
+            _imageService = imageService ?? new ImageService(new AppConfig());
             Bus = bus ?? throw new ArgumentNullException(nameof(bus));
         }
     }

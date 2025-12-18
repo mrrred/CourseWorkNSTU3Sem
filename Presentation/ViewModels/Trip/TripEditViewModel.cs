@@ -23,8 +23,12 @@ namespace CourseWork.Presentation.ViewModels.Trip
             set => SetProperty(ref _trip, value);
         }
 
-        // Свойство только для чтения - исправляем проблему с привязкой
-        public DateTime MaxDate => DateTime.Now;
+        private DateTime _maxDate = DateTime.Now;
+        public DateTime MaxDate
+        {
+            get => _maxDate;
+            private set => SetProperty(ref _maxDate, value);
+        }
 
         public ICommand SaveCommand { get; }
         public ICommand CancelCommand { get; }
@@ -39,7 +43,7 @@ namespace CourseWork.Presentation.ViewModels.Trip
 
             Trip = new TripItemViewModel
             {
-                TripDate = DateTime.Now
+                TripDate = DateTime.Now.Date // Устанавливаем только дату
             };
 
             SaveCommand = new RelayCommand(Save, CanSave);
@@ -59,6 +63,7 @@ namespace CourseWork.Presentation.ViewModels.Trip
         {
             try
             {
+                // Убедимся, что сохраняем только дату
                 var domainTrip = ConvertToDomainModel(Trip);
                 _tripService.AddTrip(domainTrip);
 
@@ -72,9 +77,10 @@ namespace CourseWork.Presentation.ViewModels.Trip
 
         private Domain.Models.Trip ConvertToDomainModel(TripItemViewModel item)
         {
+            // Убедимся, что сохраняем только дату
             return new Domain.Models.Trip(
                 _timeService,
-                item.TripDate,
+                item.TripDate.Date, // Сохраняем только дату
                 item.RouteCode,
                 item.DriverPersonnelNumber,
                 item.TicketsSold,

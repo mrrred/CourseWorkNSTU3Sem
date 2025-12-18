@@ -30,10 +30,9 @@
         <!-- Дата рейса -->
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Дата рейса:"/>
         <DatePicker Grid.Row="0" Grid.Column="1"
-            SelectedDate="{Binding Trip.TripDate}"
-            Margin="5"
-            DisplayDateEnd="{Binding MaxDate, Mode=OneWay}"/>
-        <!-- Исправлено -->
+                    SelectedDate="{Binding Trip.TripDate, UpdateSourceTrigger=PropertyChanged}"
+                    Margin="5"
+                    DisplayDateEnd="{Binding MaxDate, Mode=OneWay}"/>
 
         <!-- Шифр маршрута -->
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Шифр маршрута:"/>

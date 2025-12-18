@@ -2,15 +2,17 @@
 using CourseWork.Data.Mappings;
 using CourseWork.Data.Xml;
 using CourseWork.Data.Exceptions;
+using CourseWork.Domain;
 using CourseWork.Domain.Interfaces;
 using CourseWork.Domain.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CourseWork.Data.Repositories
 {
     public class TripRepository : XmlBaseRepository<Trip, TripDto>, ITripRepository
     {
-        private record TripKey(DateTime TripDate, string RouteCode, string DriverPersonnelNumber);
-
         public TripRepository(
             IXmlDataManager<TripDto> xmlDataManager,
             IMapper<Trip, TripDto> mapper)
@@ -23,8 +25,9 @@ namespace CourseWork.Data.Repositories
             if (item == null) throw new ArgumentNullException(nameof(item));
 
             var dtos = LoadAllDtos();
+            var key = new TripKey(item.TripDate, item.RouteCode, item.DriverPersonnelNumber);
 
-            if (dtos.Any(d => GetTripKey(d) == GetTripKey(item)))
+            if (dtos.Any(d => GetTripKey(d) == key))
                 throw new DataException($"Рейс на дату {item.TripDate} по маршруту {item.RouteCode} " +
                     $"с водителем {item.DriverPersonnelNumber} уже существует");
 
@@ -37,7 +40,8 @@ namespace CourseWork.Data.Repositories
             if (item == null) throw new ArgumentNullException(nameof(item));
 
             var dtos = LoadAllDtos();
-            var existingDtoIndex = dtos.FindIndex(d => GetTripKey(d) == GetTripKey(item));
+            var key = new TripKey(item.TripDate, item.RouteCode, item.DriverPersonnelNumber);
+            var existingDtoIndex = dtos.FindIndex(d => GetTripKey(d) == key);
 
             if (existingDtoIndex == -1)
                 throw new DataException($"Рейс на дату {item.TripDate} по маршруту {item.RouteCode} " +
@@ -52,7 +56,8 @@ namespace CourseWork.Data.Repositories
             if (item == null) throw new ArgumentNullException(nameof(item));
 
             var dtos = LoadAllDtos();
-            var count = dtos.RemoveAll(d => GetTripKey(d) == GetTripKey(item));
+            var key = new TripKey(item.TripDate, item.RouteCode, item.DriverPersonnelNumber);
+            var count = dtos.RemoveAll(d => GetTripKey(d) == key);
 
             if (count == 0)
                 throw new DataException($"Рейс на дату {item.TripDate} по маршруту {item.RouteCode} " +
@@ -98,7 +103,7 @@ namespace CourseWork.Data.Repositories
 
             var dtos = LoadAllDtos();
             return dtos
-                .Where(d => d.TripDate >= startDate && d.TripDate <= endDate)
+                .Where(d => d.TripDate.Date >= startDate.Date && d.TripDate.Date <= endDate.Date)
                 .Select(_mapper.ToDomain);
         }
 
@@ -131,7 +136,7 @@ namespace CourseWork.Data.Repositories
 
             var dtos = LoadAllDtos();
             return dtos
-                .Where(d => d.TripDate >= startDate && d.TripDate <= endDate)
+                .Where(d => d.TripDate.Date >= startDate.Date && d.TripDate.Date <= endDate.Date)
                 .Sum(d => d.TotalRevenue);
         }
 
@@ -142,7 +147,7 @@ namespace CourseWork.Data.Repositories
 
             var dtos = LoadAllDtos();
             return dtos
-                .Where(d => d.TripDate >= startDate && d.TripDate <= endDate)
+                .Where(d => d.TripDate.Date >= startDate.Date && d.TripDate.Date <= endDate.Date)
                 .Sum(d => d.TicketsSold);
         }
 
@@ -153,7 +158,7 @@ namespace CourseWork.Data.Repositories
 
             var dtos = LoadAllDtos();
             return dtos
-                .Count(d => d.TripDate >= startDate && d.TripDate <= endDate);
+                .Count(d => d.TripDate.Date >= startDate.Date && d.TripDate.Date <= endDate.Date);
         }
 
         public decimal GetAverageRevenuePerTrip(DateTime startDate, DateTime endDate)
@@ -162,7 +167,7 @@ namespace CourseWork.Data.Repositories
                 throw new ArgumentException("Начальная дата не может быть больше конечной", nameof(startDate));
 
             var dtos = LoadAllDtos();
-            var trips = dtos.Where(d => d.TripDate >= startDate && d.TripDate <= endDate).ToList();
+            var trips = dtos.Where(d => d.TripDate.Date >= startDate.Date && d.TripDate.Date <= endDate.Date).ToList();
 
             if (trips.Count == 0) return 0;
             return trips.Average(d => d.TotalRevenue);
@@ -174,7 +179,7 @@ namespace CourseWork.Data.Repositories
                 throw new ArgumentException("Начальная дата не может быть больше конечной", nameof(startDate));
 
             var dtos = LoadAllDtos();
-            var trips = dtos.Where(d => d.TripDate >= startDate && d.TripDate <= endDate).ToList();
+            var trips = dtos.Where(d => d.TripDate.Date >= startDate.Date && d.TripDate.Date <= endDate.Date).ToList();
 
             if (trips.Count == 0) return 0;
             return trips.Average(d => d.TicketsSold);
@@ -187,7 +192,7 @@ namespace CourseWork.Data.Repositories
 
             var dtos = LoadAllDtos();
             return dtos
-                .Where(d => d.TripDate >= startDate && d.TripDate <= endDate)
+                .Where(d => d.TripDate.Date >= startDate.Date && d.TripDate.Date <= endDate.Date)
                 .GroupBy(d => d.RouteCode)
                 .ToDictionary(g => g.Key, g => g.Sum(d => d.TotalRevenue));
         }
@@ -199,7 +204,7 @@ namespace CourseWork.Data.Repositories
 
             var dtos = LoadAllDtos();
             return dtos
-                .Where(d => d.TripDate >= startDate && d.TripDate <= endDate)
+                .Where(d => d.TripDate.Date >= startDate.Date && d.TripDate.Date <= endDate.Date)
                 .GroupBy(d => d.DriverPersonnelNumber)
                 .ToDictionary(g => g.Key, g => g.Sum(d => d.TotalRevenue));
         }
@@ -214,15 +219,10 @@ namespace CourseWork.Data.Repositories
 
             var dtos = LoadAllDtos();
             return dtos
-                .Where(d => d.TripDate >= startDate && d.TripDate <= endDate)
+                .Where(d => d.TripDate.Date >= startDate.Date && d.TripDate.Date <= endDate.Date)
                 .OrderByDescending(d => d.TotalRevenue)
                 .Take(count)
                 .Select(_mapper.ToDomain);
-        }
-
-        private TripKey GetTripKey(Trip trip)
-        {
-            return new TripKey(trip.TripDate, trip.RouteCode, trip.DriverPersonnelNumber);
         }
 
         private TripKey GetTripKey(TripDto dto)
@@ -232,12 +232,12 @@ namespace CourseWork.Data.Repositories
 
         protected override string GetKey(Trip domain)
         {
-            return $"{domain.TripDate:yyyyMMdd}|{domain.RouteCode}|{domain.DriverPersonnelNumber}";
+            return new TripKey(domain.TripDate, domain.RouteCode, domain.DriverPersonnelNumber).ToString();
         }
 
         protected override string GetKey(TripDto dto)
         {
-            return $"{dto.TripDate:yyyyMMdd}|{dto.RouteCode}|{dto.DriverPersonnelNumber}";
+            return new TripKey(dto.TripDate, dto.RouteCode, dto.DriverPersonnelNumber).ToString();
         }
     }
 }

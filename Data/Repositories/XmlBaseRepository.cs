@@ -1,4 +1,5 @@
-﻿using CourseWork.Data.Mappings;
+﻿using CourseWork.Core.Config;
+using CourseWork.Data.Mappings;
 using CourseWork.Data.Xml;
 
 namespace CourseWork.Data.Repositories
@@ -17,7 +18,7 @@ namespace CourseWork.Data.Repositories
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
             // Initialize settings from xmlDataManager if possible
-            _settings = new XmlFileSettings();
+            _settings = new XmlFileSettings(new AppConfig());
             XmlValidationHelper.EnsureFileExists(_xmlDataManager.GetFilePath(), typeof(TDto));
         }
 

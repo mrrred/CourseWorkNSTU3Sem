@@ -1,18 +1,25 @@
-﻿using CourseWork.Data.Exceptions;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Xml.Serialization;
+using CourseWork.Core.Config;
+using CourseWork.Data.Exceptions;
 
 namespace CourseWork.Data.Xml
 {
     public class XmlDataManager<T> : IXmlDataManager<T>
     {
-        private readonly string _filePath;
         private readonly XmlFileSettings _settings;
+        private readonly string _fileName;
+        private readonly string _filePath;
 
         public XmlDataManager(XmlFileSettings settings, string fileName)
         {
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+            _fileName = fileName ?? throw new ArgumentNullException(nameof(fileName));
+
             _settings.EnsureDataDirectoryExists();
-            _filePath = Path.Combine(_settings.DataDirectory, fileName);
+            _filePath = Path.Combine(_settings.DataDirectory, _fileName);
         }
 
         public List<T> LoadData()
@@ -55,7 +62,6 @@ namespace CourseWork.Data.Xml
         }
 
         public string GetFilePath() => _filePath;
-
         public bool FileExists() => File.Exists(_filePath);
 
         public void DeleteFile()
@@ -75,7 +81,10 @@ namespace CourseWork.Data.Xml
         {
             if (!File.Exists(_filePath)) return;
 
-            var backupFilePath = Path.Combine(backupPath, $"{Path.GetFileNameWithoutExtension(_filePath)}_{DateTime.Now:yyyyMMdd_HHmmss}.xml");
+            Directory.CreateDirectory(backupPath);
+            var backupFilePath = Path.Combine(backupPath,
+                $"{Path.GetFileNameWithoutExtension(_filePath)}_{DateTime.Now:yyyyMMdd_HHmmss}.xml");
+
             File.Copy(_filePath, backupFilePath, true);
         }
 

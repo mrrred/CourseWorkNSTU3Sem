@@ -1,13 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using CourseWork.Core.Config;
 using CourseWork.Presentation.Services;
 using CourseWork.Presentation.ViewModels;
-using CourseWork.Presentation.ViewModels.Bus;
-using CourseWork.Presentation.ViewModels.Driver;
-using CourseWork.Presentation.ViewModels.Route;
-using CourseWork.Presentation.ViewModels.Trip;
 using CourseWork.Services;
+using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.IO;
 using System.Windows;
 
 namespace CourseWork.Presentation
@@ -18,14 +14,30 @@ namespace CourseWork.Presentation
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            CreateApplicationFolders();
-            var serviceCollection = new ServiceCollection();
-            ConfigureServices(serviceCollection);
-            _serviceProvider = serviceCollection.BuildServiceProvider();
+            try
+            {
+                // Конфигурация сервисов
+                var serviceCollection = new ServiceCollection();
+                ConfigureServices(serviceCollection);
+                _serviceProvider = serviceCollection.BuildServiceProvider();
 
-            var mainWindow = new MainWindow();
-            mainWindow.DataContext = _serviceProvider.GetRequiredService<MainViewModel>();
-            mainWindow.Show();
+                // Создаем директории через конфигурацию
+                var appConfig = _serviceProvider.GetRequiredService<IAppConfig>();
+                appConfig.EnsureDirectoriesExist();
+
+                // Создаем главное окно
+                var mainWindow = new MainWindow();
+                mainWindow.DataContext = _serviceProvider.GetRequiredService<MainViewModel>();
+                mainWindow.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при запуске приложения: {ex.Message}",
+                    "Ошибка",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                Shutdown();
+            }
         }
 
         private void ConfigureServices(IServiceCollection services)
@@ -39,51 +51,18 @@ namespace CourseWork.Presentation
 
             // ViewModels
             services.AddSingleton<MainViewModel>();
-
-            // Bus
-            services.AddTransient<BusListViewModel>();
-            services.AddTransient<BusEditViewModel>();
-            services.AddTransient<BusDetailsViewModel>();
-
-            // Driver
-            services.AddTransient<DriverListViewModel>();
-            services.AddTransient<DriverEditViewModel>();
-            services.AddTransient<DriverDetailsViewModel>();
-
-            // Route
-            services.AddTransient<RouteListViewModel>();
-            services.AddTransient<RouteEditViewModel>();
-            services.AddTransient<RouteDetailsViewModel>();
-
-            // Trip
-            services.AddTransient<TripListViewModel>();
-            services.AddTransient<TripEditViewModel>();
-            services.AddTransient<TripDetailsViewModel>();
-        }
-
-        private void CreateApplicationFolders()
-        {
-            try
-            {
-                var appDataFolder = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                    "BusTransportSystem"
-                );
-
-                if (!Directory.Exists(appDataFolder))
-                    Directory.CreateDirectory(appDataFolder);
-
-                var imagesFolder = Path.Combine(appDataFolder, "Images");
-                if (!Directory.Exists(imagesFolder))
-                    Directory.CreateDirectory(imagesFolder);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка при создании папок приложения: {ex.Message}",
-                    "Ошибка",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-            }
+            services.AddTransient<ViewModels.Bus.BusListViewModel>();
+            services.AddTransient<ViewModels.Bus.BusEditViewModel>();
+            services.AddTransient<ViewModels.Bus.BusDetailsViewModel>();
+            services.AddTransient<ViewModels.Driver.DriverListViewModel>();
+            services.AddTransient<ViewModels.Driver.DriverEditViewModel>();
+            services.AddTransient<ViewModels.Driver.DriverDetailsViewModel>();
+            services.AddTransient<ViewModels.Route.RouteListViewModel>();
+            services.AddTransient<ViewModels.Route.RouteEditViewModel>();
+            services.AddTransient<ViewModels.Route.RouteDetailsViewModel>();
+            services.AddTransient<ViewModels.Trip.TripListViewModel>();
+            services.AddTransient<ViewModels.Trip.TripEditViewModel>();
+            services.AddTransient<ViewModels.Trip.TripDetailsViewModel>();
         }
     }
 }

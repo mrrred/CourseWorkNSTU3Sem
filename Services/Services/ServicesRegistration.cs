@@ -1,4 +1,5 @@
-﻿using CourseWork.Data.Dtos;
+﻿using CourseWork.Core.Config;
+using CourseWork.Data.Dtos;
 using CourseWork.Data.Mappings;
 using CourseWork.Data.Repositories;
 using CourseWork.Data.Xml;
@@ -17,38 +18,42 @@ namespace CourseWork.Services
             // Domain Services
             services.AddSingleton<ITimeService, SystemTimeService>();
 
+            // Конфигурация приложения
+            services.AddSingleton<IAppConfig, AppConfig>();
+
             // XML Settings and Managers
             services.AddSingleton<XmlFileSettings>();
 
+            // Data Managers
             services.AddSingleton<IXmlDataManager<BusDto>>(provider =>
-                new XmlDataManager<BusDto>(
-                    provider.GetRequiredService<XmlFileSettings>(),
-                    provider.GetRequiredService<XmlFileSettings>().BusFileName
-                ));
+            {
+                var settings = provider.GetRequiredService<XmlFileSettings>();
+                return new XmlDataManager<BusDto>(settings, settings.BusFileName);
+            });
 
             services.AddSingleton<IXmlDataManager<DriverDto>>(provider =>
-                new XmlDataManager<DriverDto>(
-                    provider.GetRequiredService<XmlFileSettings>(),
-                    provider.GetRequiredService<XmlFileSettings>().DriverFileName
-                ));
+            {
+                var settings = provider.GetRequiredService<XmlFileSettings>();
+                return new XmlDataManager<DriverDto>(settings, settings.DriverFileName);
+            });
 
             services.AddSingleton<IXmlDataManager<RouteDto>>(provider =>
-                new XmlDataManager<RouteDto>(
-                    provider.GetRequiredService<XmlFileSettings>(),
-                    provider.GetRequiredService<XmlFileSettings>().RouteFileName
-                ));
+            {
+                var settings = provider.GetRequiredService<XmlFileSettings>();
+                return new XmlDataManager<RouteDto>(settings, settings.RouteFileName);
+            });
 
             services.AddSingleton<IXmlDataManager<TripDto>>(provider =>
-                new XmlDataManager<TripDto>(
-                    provider.GetRequiredService<XmlFileSettings>(),
-                    provider.GetRequiredService<XmlFileSettings>().TripFileName
-                ));
+            {
+                var settings = provider.GetRequiredService<XmlFileSettings>();
+                return new XmlDataManager<TripDto>(settings, settings.TripFileName);
+            });
 
             // Mappers
-            services.AddSingleton<IMapper<CourseWork.Domain.Models.Bus, BusDto>, BusMapper>();
-            services.AddSingleton<IMapper<CourseWork.Domain.Models.Driver, DriverDto>, DriverMapper>();
-            services.AddSingleton<IMapper<CourseWork.Domain.Models.Route, RouteDto>, RouteMapper>();
-            services.AddSingleton<IMapper<CourseWork.Domain.Models.Trip, TripDto>, TripMapper>();
+            services.AddSingleton<IMapper<Domain.Models.Bus, BusDto>, BusMapper>();
+            services.AddSingleton<IMapper<Domain.Models.Driver, DriverDto>, DriverMapper>();
+            services.AddSingleton<IMapper<Domain.Models.Route, RouteDto>, RouteMapper>();
+            services.AddSingleton<IMapper<Domain.Models.Trip, TripDto>, TripMapper>();
 
             // Repositories
             services.AddSingleton<IBusRepository, BusRepository>();

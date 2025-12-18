@@ -1,10 +1,14 @@
-﻿using CourseWork.Domain.Interfaces;
+﻿using CourseWork.Domain;
+using CourseWork.Domain.Interfaces;
 using CourseWork.Domain.Models;
 using CourseWork.Domain.Services;
 using CourseWork.Services.Constants;
 using CourseWork.Services.Exceptions;
 using CourseWork.Services.Interfaces;
 using CourseWork.Services.Validators;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CourseWork.Services.Services
 {
@@ -22,24 +26,34 @@ namespace CourseWork.Services.Services
         {
             _tripRepository = tripRepository ?? throw new ArgumentNullException(nameof(tripRepository));
             _timeService = timeService ?? throw new ArgumentNullException(nameof(timeService));
+
             _validator = new TripValidator(tripRepository, driverRepository, routeRepository);
         }
 
         public void AddTrip(Trip trip)
         {
-            _validator.ValidateForAdd(trip);
+            // Убедимся, что сохраняем только дату без времени
+            var tripWithDateOnly = new Trip(
+                _timeService,
+                trip.TripDate.Date, // Сохраняем только дату
+                trip.RouteCode,
+                trip.DriverPersonnelNumber,
+                trip.TicketsSold,
+                trip.TotalRevenue
+            );
 
-            // Дополнительная бизнес-проверка: не превышает ли водитель лимит рейсов в день
-            var driverTripsToday = GetTripsByDriverAndDate(trip.DriverPersonnelNumber, trip.TripDate);
+            _validator.ValidateForAdd(tripWithDateOnly);
+
+            var driverTripsToday = GetTripsByDriverAndDate(tripWithDateOnly.DriverPersonnelNumber, tripWithDateOnly.TripDate);
             if (driverTripsToday.Count() >= BusinessConstants.Driver.MaximumTripsPerDay)
             {
-                throw new BusinessRuleException($"Водитель {trip.DriverPersonnelNumber} " +
+                throw new BusinessRuleException($"Водитель {tripWithDateOnly.DriverPersonnelNumber} " +
                     $"не может выполнить более {BusinessConstants.Driver.MaximumTripsPerDay} рейсов в день");
             }
 
             HandleRepositoryOperation(
-                () => _tripRepository.Add(trip),
-                $"Ошибка при добавлении рейса на {trip.TripDate}"
+                () => _tripRepository.Add(tripWithDateOnly),
+                $"Ошибка при добавлении рейса на {tripWithDateOnly.TripDate}"
             );
         }
 
@@ -259,6 +273,7 @@ namespace CourseWork.Services.Services
                 throw new ValidationException("Начальная дата не может быть больше конечной");
 
             var allTrips = GetTripsByDateRange(startDate, endDate);
+
             return allTrips.Where(trip =>
                 trip.TicketsSold >= BusinessConstants.Trip.MinimumTicketsForProfitableTrip &&
                 (trip.TotalRevenue / Math.Max(trip.TicketsSold, 1)) >= BusinessConstants.Trip.MinimumRevenuePerTicket
@@ -270,7 +285,5 @@ namespace CourseWork.Services.Services
             var trips = GetTripsByDriver(driverPersonnelNumber);
             return trips.Where(t => t.TripDate.Date == date.Date);
         }
-
-        internal record TripKey(DateTime TripDate, string RouteCode, string DriverPersonnelNumber);
     }
 }

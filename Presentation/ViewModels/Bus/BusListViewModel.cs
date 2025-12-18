@@ -1,4 +1,5 @@
-﻿using CourseWork.Domain.Models;
+﻿using CourseWork.Core.Config;
+using CourseWork.Domain.Models;
 using CourseWork.Presentation.Common;
 using CourseWork.Presentation.Services;
 using CourseWork.Services.Interfaces;
@@ -85,7 +86,7 @@ namespace CourseWork.Presentation.ViewModels.Bus
         public BusListViewModel(IBusService busService)
         {
             _busService = busService ?? throw new ArgumentNullException(nameof(busService));
-            _imageService = new ImageService();
+            _imageService = new ImageService(new AppConfig());
             _dialogService = new DialogService();
 
             Buses = new ObservableCollection<BusItemViewModel>();

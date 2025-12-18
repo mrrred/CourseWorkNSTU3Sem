@@ -1,5 +1,6 @@
-﻿using CourseWork.Domain.Interfaces;
+﻿using CourseWork.Domain;
 using CourseWork.Domain.Models;
+using CourseWork.Domain.Interfaces;
 using CourseWork.Services.Exceptions;
 
 namespace CourseWork.Services.Validators
@@ -58,6 +59,4 @@ namespace CourseWork.Services.Validators
                 throw new BusinessRuleException($"Маршрут с шифром {routeCode} не найден");
         }
     }
-
-    internal record TripKey(DateTime TripDate, string RouteCode, string DriverPersonnelNumber);
 }

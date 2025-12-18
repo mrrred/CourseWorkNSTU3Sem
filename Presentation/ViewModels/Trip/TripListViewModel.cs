@@ -111,7 +111,7 @@ namespace CourseWork.Presentation.ViewModels.Trip
         {
             try
             {
-                var trips = _tripService.GetTripsByDateRange(StartDate, EndDate);
+                var trips = _tripService.GetTripsByDateRange(StartDate.Date, EndDate.Date);
                 Trips.Clear();
 
                 foreach (var trip in trips)
@@ -183,7 +183,25 @@ namespace CourseWork.Presentation.ViewModels.Trip
 
             if (editWindow.ShowDialog() == true)
             {
-                LoadTrips();
+                // Перезагружаем список с учетом возможного изменения диапазона дат
+                // Убедимся, что дата нового рейса попадает в текущий диапазон
+                var newTripDate = viewModel.Trip.TripDate.Date;
+                if (newTripDate < StartDate || newTripDate > EndDate)
+                {
+                    // Если дата нового рейса вне текущего диапазона, предлагаем пользователю
+                    var response = _dialogService.ShowConfirmationDialog(
+                        $"Новый рейс добавлен на {newTripDate:dd.MM.yyyy}, но он находится за пределами текущего фильтра ({StartDate:dd.MM.yyyy} - {EndDate:dd.MM.yyyy}).\n\nХотите изменить фильтр, чтобы показать новый рейс?",
+                        "Фильтр дат");
+
+                    if (response)
+                    {
+                        // Устанавливаем диапазон, включающий новый рейс
+                        StartDate = newTripDate.AddDays(-7); // Неделя до рейса
+                        EndDate = newTripDate.AddDays(7);    // Неделя после рейса
+                    }
+                }
+
+                LoadTrips(); // Всегда перезагружаем список
                 _dialogService.ShowMessageDialog($"Рейс успешно добавлен", "Успех");
             }
         }

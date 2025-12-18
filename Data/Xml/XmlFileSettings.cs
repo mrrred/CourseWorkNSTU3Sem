@@ -1,41 +1,33 @@
-﻿namespace CourseWork.Data.Xml
+﻿using CourseWork.Core.Config;
+using System.Collections.Generic;
+using System.IO;
+
+namespace CourseWork.Data.Xml
 {
     public class XmlFileSettings
     {
-        public string DataDirectory { get; set; } = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "BusTransportSystem"
-        );
+        private readonly IAppConfig _appConfig;
 
-        public string BackupDirectory { get; set; } = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "BusTransportSystem",
-            "Backups"
-        );
-
-        public string BusFileName { get; } = "Buses.xml";
-        public string DriverFileName { get; } = "Drivers.xml";
-        public string RouteFileName { get; } = "Routes.xml";
-        public string TripFileName { get; } = "Trips.xml";
-
-        public string GetBusFilePath() => Path.Combine(DataDirectory, BusFileName);
-        public string GetDriverFilePath() => Path.Combine(DataDirectory, DriverFileName);
-        public string GetRouteFilePath() => Path.Combine(DataDirectory, RouteFileName);
-        public string GetTripFilePath() => Path.Combine(DataDirectory, TripFileName);
-        public string GetBackupDirectoryPath() => BackupDirectory;
-
-        public void EnsureDataDirectoryExists()
+        public XmlFileSettings(IAppConfig appConfig)
         {
-            if (!Directory.Exists(DataDirectory))
-            {
-                Directory.CreateDirectory(DataDirectory);
-            }
-
-            if (!Directory.Exists(BackupDirectory))
-            {
-                Directory.CreateDirectory(BackupDirectory);
-            }
+            _appConfig = appConfig ?? throw new ArgumentNullException(nameof(appConfig));
         }
+
+        public string DataDirectory => _appConfig.DataDirectory;
+        public string BackupDirectory => _appConfig.BackupsDirectory;
+
+        public string BusFileName => _appConfig.BusFileName;
+        public string DriverFileName => _appConfig.DriverFileName;
+        public string RouteFileName => _appConfig.RouteFileName;
+        public string TripFileName => _appConfig.TripFileName;
+
+        public string GetBusFilePath() => _appConfig.GetBusFilePath();
+        public string GetDriverFilePath() => _appConfig.GetDriverFilePath();
+        public string GetRouteFilePath() => _appConfig.GetRouteFilePath();
+        public string GetTripFilePath() => _appConfig.GetTripFilePath();
+        public string GetBackupDirectoryPath() => _appConfig.GetBackupDirectoryPath();
+
+        public void EnsureDataDirectoryExists() => _appConfig.EnsureDirectoriesExist();
 
         public IEnumerable<string> GetAllFilePaths()
         {

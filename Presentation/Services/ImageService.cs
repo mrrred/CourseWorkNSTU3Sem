@@ -1,48 +1,33 @@
-﻿using System.IO;
-using System.Windows.Media.Imaging;
+﻿using CourseWork.Core.Config;
+using System;
+using System.IO;
+using System.Linq;
 
 namespace CourseWork.Presentation.Services
 {
     public class ImageService : IImageService
     {
-        private readonly string _appDataFolder;
-        private readonly string _imagesFolder;
-        private const string PlaceholderImageName = "BusPlaceholder.png";
+        private readonly IAppConfig _appConfig;
 
-        public ImageService()
+        public ImageService(IAppConfig appConfig)
         {
-            _appDataFolder = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "BusTransportSystem"
-            );
-
-            _imagesFolder = Path.Combine(_appDataFolder, "Images");
-
+            _appConfig = appConfig ?? throw new ArgumentNullException(nameof(appConfig));
             EnsureDirectoriesExist();
             CreatePlaceholderImageIfNotExists();
         }
 
         private void EnsureDirectoriesExist()
         {
-            if (!Directory.Exists(_appDataFolder))
-                Directory.CreateDirectory(_appDataFolder);
-
-            if (!Directory.Exists(_imagesFolder))
-                Directory.CreateDirectory(_imagesFolder);
+            _appConfig.EnsureDirectoriesExist();
         }
 
         private void CreatePlaceholderImageIfNotExists()
         {
-            var placeholderPath = Path.Combine(_imagesFolder, PlaceholderImageName);
+            var placeholderPath = _appConfig.GetPlaceholderImagePath();
             if (!File.Exists(placeholderPath))
             {
-                // Создаем простую заглушку (белый прямоугольник 300x200)
-                var placeholder = new System.Windows.Media.Imaging.WriteableBitmap(300, 200, 96, 96,
-                    System.Windows.Media.PixelFormats.Bgra32, null);
-
-                // Можно было бы нарисовать что-то, но для простоты просто белый фон
-                // В реальном проекте здесь была бы логика создания изображения-заглушки
-                // Пока оставляем просто создание файла
+                // Создаем пустой файл как заглушку
+                // На практике лучше иметь реальное изображение в Resources
                 File.WriteAllText(placeholderPath, "");
             }
         }
@@ -56,7 +41,7 @@ namespace CourseWork.Presentation.Services
             {
                 var extension = Path.GetExtension(sourceImagePath);
                 var uniqueFileName = $"{Guid.NewGuid()}{extension}";
-                var destinationPath = Path.Combine(_imagesFolder, uniqueFileName);
+                var destinationPath = Path.Combine(_appConfig.ImagesDirectory, uniqueFileName);
 
                 File.Copy(sourceImagePath, destinationPath, true);
                 return destinationPath;
@@ -75,7 +60,7 @@ namespace CourseWork.Presentation.Services
             try
             {
                 // Удаляем только если файл находится в нашей папке с изображениями
-                if (imagePath.StartsWith(_imagesFolder))
+                if (imagePath.StartsWith(_appConfig.ImagesDirectory, StringComparison.OrdinalIgnoreCase))
                 {
                     File.Delete(imagePath);
                 }
@@ -88,7 +73,7 @@ namespace CourseWork.Presentation.Services
 
         public string GetPlaceholderImagePath()
         {
-            return Path.Combine(_imagesFolder, PlaceholderImageName);
+            return _appConfig.GetPlaceholderImagePath();
         }
 
         public bool IsValidImageFile(string filePath)
@@ -98,28 +83,7 @@ namespace CourseWork.Presentation.Services
 
             var validExtensions = new[] { ".jpg", ".jpeg", ".png", ".bmp", ".gif" };
             var extension = Path.GetExtension(filePath)?.ToLower();
-
             return validExtensions.Contains(extension);
-        }
-
-        public BitmapImage LoadImage(string imagePath)
-        {
-            if (string.IsNullOrEmpty(imagePath) || !File.Exists(imagePath))
-                return null;
-
-            try
-            {
-                var bitmap = new BitmapImage();
-                bitmap.BeginInit();
-                bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                bitmap.UriSource = new Uri(imagePath);
-                bitmap.EndInit();
-                return bitmap;
-            }
-            catch
-            {
-                return null;
-            }
         }
     }
 }

@@ -16,7 +16,7 @@
         xmlns:converters="clr-namespace:CourseWork.Presentation.Converters"
         mc:Ignorable="d"
         Title="Учет пассажирских автоперевозок"
-        Height="650" Width="1000"
+        Height="650" Width="1200"
         WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
@@ -86,8 +86,8 @@
                             Command="{Binding ShowDriverViewCommand}"/>
                     <Button Content="🗺️ Маршруты"
                             Command="{Binding ShowRouteViewCommand}"/>
-                    <Button Content="🚌📊 Рейсы и статистика"
-                            Command="{Binding ShowTripViewCommand}"/>
+                    <Button Content="🚌📊 Рейсы"
+                            Command="{Binding ShowTripViewCommand}" Click="Button_Click"/>
                 </StackPanel>
             </Border>
 

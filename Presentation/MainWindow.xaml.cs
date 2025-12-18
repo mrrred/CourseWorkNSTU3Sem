@@ -11,5 +11,10 @@ namespace CourseWork.Presentation
             // DataContext будет установлен в App.xaml.cs после создания окна
             // Не устанавливаем его здесь, чтобы избежать ошибки при вызове InitializeComponent()
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

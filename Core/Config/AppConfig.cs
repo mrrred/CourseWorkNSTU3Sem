@@ -37,6 +37,7 @@ namespace CourseWork.Core.Config
         public string ImagesDirectory => Path.Combine(DataDirectory, "Images");
         public string BackupsDirectory => Path.Combine(DataDirectory, "Backups");
         public string ResourcesDirectory => Path.Combine(_baseDirectory, "Resources");
+        public string ResourcesImagesDirectory => Path.Combine(ResourcesDirectory, "Images");
 
         public string BusFileName => "Buses.xml";
         public string DriverFileName => "Drivers.xml";
@@ -48,7 +49,7 @@ namespace CourseWork.Core.Config
         public string GetDriverFilePath() => Path.Combine(DataDirectory, DriverFileName);
         public string GetRouteFilePath() => Path.Combine(DataDirectory, RouteFileName);
         public string GetTripFilePath() => Path.Combine(DataDirectory, TripFileName);
-        public string GetPlaceholderImagePath() => Path.Combine(ImagesDirectory, PlaceholderImageName);
+        public string GetPlaceholderImagePath() => Path.Combine(ResourcesImagesDirectory, PlaceholderImageName);
         public string GetBackupDirectoryPath() => BackupsDirectory;
 
         public IEnumerable<string> GetAllDataFilePaths()

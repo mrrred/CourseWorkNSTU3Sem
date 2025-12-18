@@ -6,14 +6,18 @@
         xmlns:local="clr-namespace:CourseWork.Presentation"
         xmlns:viewModels="clr-namespace:CourseWork.Presentation.ViewModels"
         xmlns:viewModelsBus="clr-namespace:CourseWork.Presentation.ViewModels.Bus"
+        xmlns:viewModelsDriver="clr-namespace:CourseWork.Presentation.ViewModels.Driver"
+        xmlns:viewModelsRoute="clr-namespace:CourseWork.Presentation.ViewModels.Route"
+        xmlns:viewModelsTrip="clr-namespace:CourseWork.Presentation.ViewModels.Trip"
         xmlns:viewsBus="clr-namespace:CourseWork.Presentation.Views.Bus"
+        xmlns:viewsDriver="clr-namespace:CourseWork.Presentation.Views.Driver"
+        xmlns:viewsRoute="clr-namespace:CourseWork.Presentation.Views.Route"
+        xmlns:viewsTrip="clr-namespace:CourseWork.Presentation.Views.Trip"
         xmlns:converters="clr-namespace:CourseWork.Presentation.Converters"
         mc:Ignorable="d"
         Title="Учет пассажирских автоперевозок"
         Height="650" Width="1000"
         WindowStartupLocation="CenterScreen">
-
-    <!-- Уберите DataContext из разметки XAML -->
 
     <Window.Resources>
         <converters:NullImageConverter x:Key="NullImageConverter"/>
@@ -29,21 +33,21 @@
             <Setter Property="Margin" Value="5"/>
         </Style>
 
-        <!-- DataTemplate для заглушки -->
-        <DataTemplate DataType="{x:Type viewModels:PlaceholderViewModel}">
-            <Border Background="White" Padding="20">
-                <TextBlock Text="{Binding Title}"
-                           FontSize="24"
-                           FontWeight="Bold"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"
-                           Foreground="Gray"/>
-            </Border>
-        </DataTemplate>
-
-        <!-- DataTemplate для BusListViewModel -->
+        <!-- DataTemplates -->
         <DataTemplate DataType="{x:Type viewModelsBus:BusListViewModel}">
             <viewsBus:BusListView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModelsDriver:DriverListViewModel}">
+            <viewsDriver:DriverListView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModelsRoute:RouteListViewModel}">
+            <viewsRoute:RouteListView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModelsTrip:TripListViewModel}">
+            <viewsTrip:TripListView/>
         </DataTemplate>
     </Window.Resources>
 

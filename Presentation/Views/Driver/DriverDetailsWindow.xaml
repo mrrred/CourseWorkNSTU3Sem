@@ -1,0 +1,72 @@
+﻿<Window x:Class="CourseWork.Presentation.Views.Driver.DriverDetailsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Детальная информация о водителе"
+        Height="450"
+        Width="400"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Табельный номер -->
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Табельный номер:" FontWeight="Bold"/>
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Driver.PersonnelNumber}"/>
+
+        <!-- ФИО -->
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="ФИО:" FontWeight="Bold"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Driver.FullName}"/>
+
+        <!-- Год рождения -->
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Год рождения:" FontWeight="Bold"/>
+        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Driver.BirthYear}"/>
+
+        <!-- Возраст -->
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Возраст:" FontWeight="Bold"/>
+        <TextBlock Grid.Row="3" Grid.Column="1">
+            <Run Text="{Binding Driver.Age}"/>
+            <Run Text="лет"/>
+        </TextBlock>
+
+        <!-- Стаж работы -->
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Стаж работы:" FontWeight="Bold"/>
+        <TextBlock Grid.Row="4" Grid.Column="1">
+            <Run Text="{Binding Driver.ExperienceYears}"/>
+            <Run Text="лет"/>
+        </TextBlock>
+
+        <!-- Категория -->
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Категория:" FontWeight="Bold"/>
+        <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding Driver.LicenseCategory}"/>
+
+        <!-- Классность -->
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="Классность:" FontWeight="Bold"/>
+        <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding Driver.DriverClassDisplay}"/>
+
+        <!-- Кнопка закрытия -->
+        <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2"
+                Content="Закрыть"
+                Width="100"
+                HorizontalAlignment="Center"
+                Margin="0 20 0 0"
+                Click="CloseButton_Click"/>
+    </Grid>
+</Window>

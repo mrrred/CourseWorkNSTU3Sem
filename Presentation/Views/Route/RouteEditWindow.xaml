@@ -1,0 +1,149 @@
+﻿<Window x:Class="CourseWork.Presentation.Views.Route.RouteEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Редактирование маршрута"
+        Height="600"
+        Width="500"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Шифр маршрута -->
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Шифр маршрута:"/>
+        <TextBox Grid.Row="0" Grid.Column="1"
+                 Text="{Binding Route.RouteCode, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="5"/>
+
+        <!-- Начальный пункт -->
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Начальный пункт:"/>
+        <TextBox Grid.Row="1" Grid.Column="1"
+                 Text="{Binding Route.StartPoint, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="5"/>
+
+        <!-- Конечный пункт -->
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Конечный пункт:"/>
+        <TextBox Grid.Row="2" Grid.Column="1"
+                 Text="{Binding Route.EndPoint, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="5"/>
+
+        <!-- Время отправления -->
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Время отправления:"/>
+        <TextBox Grid.Row="3" Grid.Column="1"
+                 Text="{Binding Route.DepartureTime, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="5">
+            <TextBox.ToolTip>
+                <TextBlock Text="Формат: чч:мм (например, 08:30)"/>
+            </TextBox.ToolTip>
+        </TextBox>
+
+        <!-- Время в пути -->
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Время в пути:"/>
+        <TextBox Grid.Row="4" Grid.Column="1"
+                 Text="{Binding Route.TravelTime, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="5">
+            <TextBox.ToolTip>
+                <TextBlock Text="Формат: чч:мм (например, 02:15)"/>
+            </TextBox.ToolTip>
+        </TextBox>
+
+        <!-- Промежуточные пункты -->
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Промежуточные пункты:"/>
+        <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
+            <TextBox Text="{Binding NewIntermediatePoint, UpdateSourceTrigger=PropertyChanged}"
+                     Width="200"
+                     Margin="5"/>
+            <Button Content="Добавить"
+                    Command="{Binding AddIntermediatePointCommand}"
+                    Margin="5 0 0 0"/>
+        </StackPanel>
+
+        <!-- Список промежуточных пунктов -->
+        <ListBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
+                 ItemsSource="{Binding Route.IntermediatePoints}"
+                 Height="100"
+                 Margin="5">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding}" VerticalAlignment="Center"/>
+                        <Button Content="Удалить"
+                                Command="{Binding DataContext.RemoveIntermediatePointCommand, 
+                                         RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}"
+                                Margin="10 0 0 0"
+                                Padding="5 2"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <!-- Дни отправления -->
+        <TextBlock Grid.Row="7" Grid.Column="0" Text="Дни отправления:"/>
+        <StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal">
+            <ComboBox ItemsSource="{Binding AllDays}"
+                      SelectedItem="{Binding SelectedDay}"
+                      Width="100"
+                      Margin="5"/>
+            <Button Content="Добавить день"
+                    Command="{Binding AddDepartureDayCommand}"
+                    Margin="5 0 0 0"/>
+        </StackPanel>
+
+        <!-- Список дней отправления -->
+        <ListBox Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2"
+                 ItemsSource="{Binding Route.DepartureDays}"
+                 Height="100"
+                 Margin="5">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding}" VerticalAlignment="Center"/>
+                        <Button Content="Удалить"
+                                Command="{Binding DataContext.RemoveDepartureDayCommand, 
+                                         RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}"
+                                Margin="10 0 0 0"
+                                Padding="5 2"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <!-- Кнопки -->
+        <StackPanel Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0 20 0 0">
+            <Button Content="Сохранить"
+                    Command="{Binding SaveCommand}"
+                    Width="100"
+                    IsDefault="True"/>
+            <Button Content="Отмена"
+                    Command="{Binding CancelCommand}"
+                    Width="100"
+                    Margin="10 0 0 0"
+                    IsCancel="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

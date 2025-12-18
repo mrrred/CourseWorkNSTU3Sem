@@ -1,0 +1,82 @@
+﻿<Window x:Class="CourseWork.Presentation.Views.Trip.TripEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Добавление выполненного рейса"
+        Height="450"
+        Width="400"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Дата рейса -->
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Дата рейса:"/>
+        <DatePicker Grid.Row="0" Grid.Column="1"
+            SelectedDate="{Binding Trip.TripDate}"
+            Margin="5"
+            DisplayDateEnd="{Binding MaxDate, Mode=OneWay}"/>
+        <!-- Исправлено -->
+
+        <!-- Шифр маршрута -->
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Шифр маршрута:"/>
+        <TextBox Grid.Row="1" Grid.Column="1"
+                 Text="{Binding Trip.RouteCode, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="5"/>
+
+        <!-- Табельный номер водителя -->
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Табельный номер водителя:"/>
+        <TextBox Grid.Row="2" Grid.Column="1"
+                 Text="{Binding Trip.DriverPersonnelNumber, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="5"/>
+
+        <!-- Количество проданных билетов -->
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Проданных билетов:"/>
+        <TextBox Grid.Row="3" Grid.Column="1"
+                 Text="{Binding Trip.TicketsSold, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="5"/>
+
+        <!-- Общая выручка -->
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Общая выручка:"/>
+        <TextBox Grid.Row="4" Grid.Column="1"
+                 Text="{Binding Trip.TotalRevenue, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="5">
+            <TextBox.ToolTip>
+                <TextBlock Text="Укажите выручку в рублях"/>
+            </TextBox.ToolTip>
+        </TextBox>
+
+        <!-- Кнопки -->
+        <StackPanel Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0 20 0 0">
+            <Button Content="Сохранить"
+                    Command="{Binding SaveCommand}"
+                    Width="100"
+                    IsDefault="True"/>
+            <Button Content="Отмена"
+                    Command="{Binding CancelCommand}"
+                    Width="100"
+                    Margin="10 0 0 0"
+                    IsCancel="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

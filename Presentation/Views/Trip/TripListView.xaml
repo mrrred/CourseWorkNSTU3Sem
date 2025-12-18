@@ -1,0 +1,155 @@
+﻿<UserControl x:Class="CourseWork.Presentation.Views.Trip.TripListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <TextBlock Grid.Row="0" Text="🚌📊 Выполненные рейсы"
+                   FontSize="20" FontWeight="Bold"
+                   Margin="10"/>
+
+        <!-- Фильтры -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10 0 10 5">
+            <TextBlock Text="Период с:" VerticalAlignment="Center" Margin="0 0 5 0"/>
+            <DatePicker SelectedDate="{Binding StartDate}"
+                        Width="120"
+                        Margin="0 0 20 0"/>
+            <TextBlock Text="по:" VerticalAlignment="Center" Margin="0 0 5 0"/>
+            <DatePicker SelectedDate="{Binding EndDate}"
+                        Width="120"
+                        Margin="0 0 20 0"/>
+            <Button Content="Показать статистику"
+                    Command="{Binding ShowStatisticsCommand}"
+                    Padding="10 5"/>
+        </StackPanel>
+
+        <!-- Панель инструментов -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="10 0 10 10">
+            <Button Content="Добавить рейс"
+                    Command="{Binding AddTripCommand}"
+                    Padding="10 5"/>
+            <Button Content="Просмотреть детали"
+                    Command="{Binding ViewDetailsCommand}"
+                    Padding="10 5"
+                    Margin="10 0 0 0"/>
+            <Button Content="Удалить"
+                    Command="{Binding DeleteTripCommand}"
+                    Padding="10 5"
+                    Margin="10 0 0 0"/>
+            <Button Content="Обновить"
+                    Command="{Binding RefreshCommand}"
+                    Padding="10 5"
+                    Margin="20 0 0 0"/>
+            <TextBlock Text="Поиск:"
+                       VerticalAlignment="Center"
+                       Margin="20 0 5 0"/>
+            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                     Width="200"
+                     Margin="5 0 0 0"
+                     Padding="5"
+                     VerticalAlignment="Center">
+                <TextBox.ToolTip>
+                    <TextBlock Text="Поиск по шифру маршрута или табельному номеру водителя"/>
+                </TextBox.ToolTip>
+            </TextBox>
+        </StackPanel>
+
+        <!-- Список рейсов -->
+        <DataGrid Grid.Row="3"
+                  ItemsSource="{Binding FilteredTrips}"
+                  SelectedItem="{Binding SelectedTrip}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  IsReadOnly="True"
+                  SelectionMode="Single"
+                  Margin="10">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Дата рейса"
+                                    Binding="{Binding TripDateDisplay}"
+                                    Width="100">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Шифр маршрута"
+                                    Binding="{Binding RouteCode}"
+                                    Width="100"/>
+                <DataGridTextColumn Header="Табельный номер водителя"
+                                    Binding="{Binding DriverPersonnelNumber}"
+                                    Width="120"/>
+                <DataGridTextColumn Header="Продано билетов"
+                                    Binding="{Binding TicketsSold}"
+                                    Width="100">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Выручка"
+                                    Binding="{Binding TotalRevenue, StringFormat={}{0:C}}"
+                                    Width="100">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Средняя цена билета"
+                                    Binding="{Binding RevenuePerTicketDisplay, StringFormat={}{0:C}}"
+                                    Width="120">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Статус и статистика -->
+        <StatusBar Grid.Row="4" Margin="10 5 10 10">
+            <StatusBarItem>
+                <TextBlock>
+                    <Run Text="Всего рейсов:"/>
+                    <Run Text="{Binding TotalTripCount, Mode=OneWay}"/>
+                </TextBlock>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <TextBlock>
+                    <Run Text="Отображается:"/>
+                    <Run Text="{Binding FilteredTripCount, Mode=OneWay}"/>
+                </TextBlock>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <TextBlock>
+                    <Run Text="Общая выручка:"/>
+                    <Run Text="{Binding TotalRevenue, StringFormat={}{0:C}, Mode=OneWay}"/>
+                </TextBlock>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <TextBlock>
+                    <Run Text="Проданных билетов:"/>
+                    <Run Text="{Binding TotalTicketsSold, Mode=OneWay}"/>
+                </TextBlock>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</UserControl>

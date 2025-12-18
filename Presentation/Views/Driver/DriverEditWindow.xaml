@@ -1,0 +1,89 @@
+﻿<Window x:Class="CourseWork.Presentation.Views.Driver.DriverEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Редактирование водителя"
+        Height="500"
+        Width="400"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ФИО -->
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="ФИО:"/>
+        <TextBox Grid.Row="0" Grid.Column="1"
+                 Text="{Binding Driver.FullName, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="5"/>
+
+        <!-- Табельный номер -->
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Табельный номер:"/>
+        <TextBox Grid.Row="1" Grid.Column="1"
+                 Text="{Binding Driver.PersonnelNumber, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="5"/>
+
+        <!-- Год рождения -->
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Год рождения:"/>
+        <TextBox Grid.Row="2" Grid.Column="1"
+                 Text="{Binding Driver.BirthYear, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="5">
+            <TextBox.ToolTip>
+                <TextBlock Text="Год рождения должен быть между 1900 и текущим годом"/>
+            </TextBox.ToolTip>
+        </TextBox>
+
+        <!-- Стаж работы -->
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Стаж работы (лет):"/>
+        <TextBox Grid.Row="3" Grid.Column="1"
+                 Text="{Binding Driver.ExperienceYears, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="5"/>
+
+        <!-- Категория водителя -->
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Категория:"/>
+        <ComboBox Grid.Row="4" Grid.Column="1"
+                  ItemsSource="{Binding ValidLicenseCategories}"
+                  SelectedItem="{Binding Driver.LicenseCategory}"
+                  Margin="5"/>
+
+        <!-- Классность -->
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Классность:"/>
+        <ComboBox Grid.Row="5" Grid.Column="1"
+                  ItemsSource="{Binding ValidDriverClasses}"
+                  SelectedItem="{Binding Driver.DriverClass}"
+                  Margin="5"/>
+
+        <!-- Кнопки -->
+        <StackPanel Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0 20 0 0">
+            <Button Content="Сохранить"
+                    Command="{Binding SaveCommand}"
+                    Width="100"
+                    IsDefault="True"/>
+            <Button Content="Отмена"
+                    Command="{Binding CancelCommand}"
+                    Width="100"
+                    Margin="10 0 0 0"
+                    IsCancel="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

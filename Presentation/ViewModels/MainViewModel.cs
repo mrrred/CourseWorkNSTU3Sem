@@ -1,5 +1,9 @@
 ﻿using CourseWork.Presentation.Common;
+using CourseWork.Presentation.Services;
 using CourseWork.Presentation.ViewModels.Bus;
+using CourseWork.Presentation.ViewModels.Driver;
+using CourseWork.Presentation.ViewModels.Route;
+using CourseWork.Presentation.ViewModels.Trip;
 using CourseWork.Services.Interfaces;
 using System.Windows.Input;
 
@@ -11,6 +15,7 @@ namespace CourseWork.Presentation.ViewModels
         private readonly IDriverService _driverService;
         private readonly IRouteService _routeService;
         private readonly ITripService _tripService;
+        private readonly IDialogService _dialogService;
 
         private ObservableObject _currentViewModel;
 
@@ -29,19 +34,20 @@ namespace CourseWork.Presentation.ViewModels
             IBusService busService,
             IDriverService driverService,
             IRouteService routeService,
-            ITripService tripService)
+            ITripService tripService,
+            IDialogService dialogService)
         {
             _busService = busService;
             _driverService = driverService;
             _routeService = routeService;
             _tripService = tripService;
+            _dialogService = dialogService;
 
             ShowBusViewCommand = new RelayCommand(ShowBusView);
             ShowDriverViewCommand = new RelayCommand(ShowDriverView);
             ShowRouteViewCommand = new RelayCommand(ShowRouteView);
             ShowTripViewCommand = new RelayCommand(ShowTripView);
 
-            // По умолчанию показываем список автобусов
             ShowBusView();
         }
 
@@ -52,17 +58,17 @@ namespace CourseWork.Presentation.ViewModels
 
         private void ShowDriverView()
         {
-            CurrentViewModel = new PlaceholderViewModel("Водители");
+            CurrentViewModel = new DriverListViewModel(_driverService);
         }
 
         private void ShowRouteView()
         {
-            CurrentViewModel = new PlaceholderViewModel("Маршруты");
+            CurrentViewModel = new RouteListViewModel(_routeService);
         }
 
         private void ShowTripView()
         {
-            CurrentViewModel = new PlaceholderViewModel("Рейсы и статистика");
+            CurrentViewModel = new TripListViewModel(_tripService);
         }
     }
 }

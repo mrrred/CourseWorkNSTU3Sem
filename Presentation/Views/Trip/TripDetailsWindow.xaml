@@ -1,0 +1,65 @@
+﻿<Window x:Class="CourseWork.Presentation.Views.Trip.TripDetailsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Детальная информация о рейсе"
+        Height="400"
+        Width="400"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Дата рейса -->
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Дата рейса:" FontWeight="Bold"/>
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Trip.TripDateDisplay}"/>
+
+        <!-- Шифр маршрута -->
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Шифр маршрута:" FontWeight="Bold"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Trip.RouteCode}"/>
+
+        <!-- Табельный номер водителя -->
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Табельный номер водителя:" FontWeight="Bold"/>
+        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Trip.DriverPersonnelNumber}"/>
+
+        <!-- Количество проданных билетов -->
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Проданных билетов:" FontWeight="Bold"/>
+        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Trip.TicketsSold}"/>
+
+        <!-- Общая выручка -->
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Общая выручка:" FontWeight="Bold"/>
+        <TextBlock Grid.Row="4" Grid.Column="1">
+            <Run Text="{Binding Trip.TotalRevenue, StringFormat={}{0:C}}"/>
+        </TextBlock>
+
+        <!-- Средняя цена билета -->
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Средняя цена билета:" FontWeight="Bold"/>
+        <TextBlock Grid.Row="5" Grid.Column="1">
+            <Run Text="{Binding Trip.RevenuePerTicketDisplay, StringFormat={}{0:C}}"/>
+        </TextBlock>
+
+        <!-- Кнопка закрытия -->
+        <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
+                Content="Закрыть"
+                Width="100"
+                HorizontalAlignment="Center"
+                Margin="0 20 0 0"
+                Click="CloseButton_Click"/>
+    </Grid>
+</Window>

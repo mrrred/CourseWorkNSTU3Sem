@@ -204,9 +204,8 @@ namespace CourseWork.Presentation.ViewModels.Bus
         {
             if (SelectedBus == null) return;
 
-            // Создаем копию для редактирования
+            var selectedGovernmentNumber = SelectedBus.GovernmentNumber; // Сохраняем
             var busCopy = SelectedBus.Clone();
-
             var editWindow = new Views.Bus.BusEditWindow();
             var viewModel = new BusEditViewModel(_busService, _imageService, _dialogService, busCopy);
             editWindow.DataContext = viewModel;
@@ -214,10 +213,16 @@ namespace CourseWork.Presentation.ViewModels.Bus
 
             if (editWindow.ShowDialog() == true)
             {
-                // Перезагружаем список
                 LoadBuses();
 
-                _dialogService.ShowMessageDialog($"Автобус {SelectedBus.GovernmentNumber} успешно обновлен", "Успех");
+                // Восстанавливаем выбранный автобус
+                SelectedBus = FilteredBuses.FirstOrDefault(b => b.GovernmentNumber == selectedGovernmentNumber);
+
+                string message = SelectedBus != null
+                    ? $"Автобус {SelectedBus.GovernmentNumber} успешно обновлен"
+                    : "Автобус успешно обновлен";
+
+                _dialogService.ShowMessageDialog(message, "Успех");
             }
         }
 

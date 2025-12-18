@@ -1,0 +1,82 @@
+﻿<Window x:Class="CourseWork.Presentation.Views.Route.RouteDetailsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Детальная информация о маршруте"
+        Height="550"
+        Width="500"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Шифр маршрута -->
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Шифр маршрута:" FontWeight="Bold"/>
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Route.RouteCode}"/>
+
+        <!-- Начальный пункт -->
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Начальный пункт:" FontWeight="Bold"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Route.StartPoint}"/>
+
+        <!-- Конечный пункт -->
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Конечный пункт:" FontWeight="Bold"/>
+        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Route.EndPoint}"/>
+
+        <!-- Время отправления -->
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Время отправления:" FontWeight="Bold"/>
+        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Route.DepartureTimeDisplay}"/>
+
+        <!-- Время в пути -->
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Время в пути:" FontWeight="Bold"/>
+        <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Route.TravelTimeDisplay}"/>
+
+        <!-- Дни отправления -->
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Дни отправления:" FontWeight="Bold"/>
+        <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding Route.DepartureDaysDisplay}"/>
+
+        <!-- Промежуточные пункты -->
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="Промежуточные пункты:" FontWeight="Bold"/>
+        <TextBlock Grid.Row="6" Grid.Column="1">
+            <Run Text="{Binding Route.IntermediatePoints.Count}"/>
+            <Run Text=" пунктов"/>
+        </TextBlock>
+
+        <!-- Список промежуточных пунктов -->
+        <ListBox Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2"
+                 ItemsSource="{Binding Route.IntermediatePoints}"
+                 Margin="5"
+                 Height="150">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" Margin="2"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <!-- Кнопка закрытия -->
+        <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2"
+                Content="Закрыть"
+                Width="100"
+                HorizontalAlignment="Center"
+                Margin="0 20 0 0"
+                Click="CloseButton_Click"/>
+    </Grid>
+</Window>

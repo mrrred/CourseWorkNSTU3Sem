@@ -1,6 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using CourseWork.Presentation.Services;
 using CourseWork.Presentation.ViewModels;
+using CourseWork.Presentation.ViewModels.Bus;
+using CourseWork.Presentation.ViewModels.Driver;
+using CourseWork.Presentation.ViewModels.Route;
+using CourseWork.Presentation.ViewModels.Trip;
 using CourseWork.Services;
 using System;
 using System.IO;
@@ -14,18 +18,13 @@ namespace CourseWork.Presentation
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            // Создаем необходимые папки при запуске
             CreateApplicationFolders();
-
-            // Конфигурация сервисов
             var serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
             _serviceProvider = serviceCollection.BuildServiceProvider();
 
-            // Создаем главное окно и устанавливаем DataContext через ServiceProvider
             var mainWindow = new MainWindow();
-            var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
-            mainWindow.DataContext = mainViewModel;
+            mainWindow.DataContext = _serviceProvider.GetRequiredService<MainViewModel>();
             mainWindow.Show();
         }
 
@@ -39,20 +38,33 @@ namespace CourseWork.Presentation
             services.AddApplicationServices();
 
             // ViewModels
-            services.AddSingleton<MainViewModel>(); // Измените на Singleton, если нужно одно окно
-            services.AddTransient<ViewModels.Bus.BusListViewModel>();
-            services.AddTransient<ViewModels.Bus.BusEditViewModel>();
-            services.AddTransient<ViewModels.Bus.BusDetailsViewModel>();
+            services.AddSingleton<MainViewModel>();
 
-            // Другие ViewModels (заглушки пока)
-            services.AddTransient<PlaceholderViewModel>();
+            // Bus
+            services.AddTransient<BusListViewModel>();
+            services.AddTransient<BusEditViewModel>();
+            services.AddTransient<BusDetailsViewModel>();
+
+            // Driver
+            services.AddTransient<DriverListViewModel>();
+            services.AddTransient<DriverEditViewModel>();
+            services.AddTransient<DriverDetailsViewModel>();
+
+            // Route
+            services.AddTransient<RouteListViewModel>();
+            services.AddTransient<RouteEditViewModel>();
+            services.AddTransient<RouteDetailsViewModel>();
+
+            // Trip
+            services.AddTransient<TripListViewModel>();
+            services.AddTransient<TripEditViewModel>();
+            services.AddTransient<TripDetailsViewModel>();
         }
 
         private void CreateApplicationFolders()
         {
             try
             {
-                // Папка для данных приложения
                 var appDataFolder = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "BusTransportSystem"
@@ -61,7 +73,6 @@ namespace CourseWork.Presentation
                 if (!Directory.Exists(appDataFolder))
                     Directory.CreateDirectory(appDataFolder);
 
-                // Папка для изображений
                 var imagesFolder = Path.Combine(appDataFolder, "Images");
                 if (!Directory.Exists(imagesFolder))
                     Directory.CreateDirectory(imagesFolder);
